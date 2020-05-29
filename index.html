@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WeatherApp</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <h1>Weather app ☀</h1>
+    <h2>Search for the weather wherever you are</h2>
+<div class="conatainer">
+  <form class = "search-form" id="search-form">
+    <div class="search">
+      <input
+        type="search"
+        placeholder="Enter your location here"
+        autofocus="on"
+        autocomplete="off"
+        id="city-input"
+        class="from-control shadow-sm"
+      />
+      <input type="submit" placeholder="search" />
+    </div>
+</div>
+<ul> 
+  <li id="date">
+  </li>
+  <li>
+    Humidity:<span id="humidity"> </span>%
+  </li>
+  <li> 
+    Wind: <span id="wind"></span>km/h
+  </li>
+  </ul>
+    <p class="today" id="city">
+      Enter your location
+    <div class="float-left">
+      <span class="temperature" id="temperature"></span
+      ><span class="units">
+        <a href="#" id="celsius-link">°C</a> |
+        <a href="#" id="fahrenheit-link">°F</a>
+      </span>
+    </div>
+    <div class="col-7">
+      <button class="btn btn-success w-100" id="currentLocationButton">
+        Current location 🚩
+      </button>
+  </p>
+    <div class="row nextDays">
+      <div class="col-6 nextDay">Tomorrow 23°C ☀</div>
+      <div class="col-6 nextDay">5th of May 19°C 🌧</div>
+      <div class="col nextDay">6th of May 18°C ☀</div>
+      <div class="col nextDay">7th of May 15°C 🌧</div>
+      <div class="col nextDay">8th of May 20°C ⛅</div>
+    </div>
+    </div>
+<script>
+
+function formatDate(date) {
+  let hours = date.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  let minutes = date.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+let dayIndex = currentTime.getDay();
+let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ];
+  return `${days[dayIndex]} ${hours}:${minutes}`;
+}
+let dateElement = document.querySelector("#date");
+let currentTime = new Date ();
+dateElement.innerHTML =formatDate(currentTime);
+
+function displayWeatherCondition(response){
+  document.querySelector("#city").innerHTML = response.data.name;
+document.querySelector("#temperature").innerHTML = Math.round(response.data.main.temp);
+document.querySelector("#humidity").innerHTML = response.data.main.humidity;
+document.querySelector("#wind").innerHTML = Math.round(response.data.wind.speed);
+}
+function searchLocation(position) {
+  let apiKey= "75bc5f01b06d79da7f067d786a866cfa"
+  let apiUrl = `https//api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&cnt=10&appid=${apiKey}&units=metric`;
+  navigator.geolocation.getCurrentPosition(searchLocation);
+  axios.get(apiUrl).then(displayWeatherCondition);
+}
+function search(event){ 
+  event.preventDefault();
+  let apiKey= "75bc5f01b06d79da7f067d786a866cfa"
+  let city = document.querySelector("#city-input").value;
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city},&appid=${apiKey}&units=metric`;
+axios.get(apiUrl).then(displayWeatherCondition);
+
+  let cityElement = document.querySelector ("#city");
+let cityInput= document.querySelector ("#city-input");
+cityElement.innerHTML= cityInput.value;
+}
+let searchForm= document.querySelector("#search-form");
+searchForm.addEventListener("submit", search)
+
+let currentLocationButton = document.querySelector
+("#current-location-button");
+currentLocationButton.addEventListener("click",getCurrentLocation);
+  </script> 
+  </body>
+</html>
